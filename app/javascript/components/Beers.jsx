@@ -1,7 +1,46 @@
 import React, { useState, useEffect } from 'react';
+import { Table, message, Popconfirm } from 'antd';
 
 const Beers = () => {
 	const [beers, setBeers] = useState([]);
+	const columns = [
+		{
+			title: 'Brand',
+			dataIndex: 'brand',
+			key: 'brand',
+		},
+		{
+			title: 'Style',
+			dataIndex: 'style',
+			key: 'style',
+		},
+		{
+			title: 'Country',
+			dataIndex: 'country',
+			key: 'country',
+		},
+		{
+			title: 'Quantity',
+			dataIndex: 'quantity',
+			key: 'quantity',
+		},
+		{
+			title: '',
+			key: 'action',
+			render: (_text, record) => (
+				<Popconfirm
+					title="Are you sure to delete this beer?"
+					onConfirm={() => deleteBeer(record.id)}
+					okText="Yes"
+					cancelText="No"
+				>
+					<a href="#" type="danger">
+						Delete{' '}
+					</a>
+				</Popconfirm>
+			),
+		},
+	];
 	useEffect(() => {
 		const loadBeers = async () => {
 			try {
@@ -22,13 +61,32 @@ const Beers = () => {
 					setBeers((prevState) => [...prevState, beerObj]);
 				});
 			} catch (error) {
-				console.error(error.message);
+				message.error(error.message);
 			}
 		};
 		loadBeers();
 	}, []);
-
-	return <div>hello world</div>;
+	function deleteBeer(id) {
+		const url = `api/v1/beers/${id}`;
+		try {
+			fetch(url, { method: 'delete' }).then((data) => {
+				if (data.ok) {
+					setBeers([]);
+					return data.json();
+				}
+			});
+		} catch (error) {
+			message.error(error.message);
+		}
+	}
+	return (
+		<Table
+			className="table-striped-rows"
+			dataSource={beers}
+			columns={columns}
+			pagination={{ pageSize: 5 }}
+		/>
+	);
 };
 
 export default Beers;
