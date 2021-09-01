@@ -1,0 +1,15 @@
+current directory: /Users/ajeas/Desktop/crud-rails-react/vendor/bundle/ruby/3.0.0/gems/bindex-0.8.1/ext/skiptrace
+/Users/ajeas/.rvm/rubies/ruby-3.0.1/bin/ruby -I /Users/ajeas/.rvm/rubies/ruby-3.0.1/lib/ruby/3.0.0 -r ./siteconf20210831-34597-z5nffc.rb extconf.rb
+creating Makefile
+
+current directory: /Users/ajeas/Desktop/crud-rails-react/vendor/bundle/ruby/3.0.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= clean
+
+current directory: /Users/ajeas/Desktop/crud-rails-react/vendor/bundle/ruby/3.0.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\=
+compiling cruby.c
+linking shared-object skiptrace/internal/cruby.bundle
+
+current directory: /Users/ajeas/Desktop/crud-rails-react/vendor/bundle/ruby/3.0.0/gems/bindex-0.8.1/ext/skiptrace
+make DESTDIR\= install
+/usr/local/opt/coreutils/bin/ginstall -c -m 0755 cruby.bundle ./.gem.20210831-34597-f4svf4/skiptrace/internal
