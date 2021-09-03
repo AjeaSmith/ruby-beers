@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, message, Popconfirm } from 'antd';
+import AddBeerModal from './AddBeerModal';
 
 const Beers = () => {
 	const [beers, setBeers] = useState([]);
@@ -41,51 +42,59 @@ const Beers = () => {
 			),
 		},
 	];
-	useEffect(() => {
-		const loadBeers = async () => {
-			try {
-				// API routes within routes.rb file
-				const url = '/api/v1/beers/index';
-
-				const response = await fetch(url);
-				const result = await response.json();
-				result.forEach((beer) => {
-					const beerObj = {
-						key: beer.id,
-						id: beer.id,
-						brand: beer.brand,
-						style: beer.style,
-						country: beer.country,
-						quantity: beer.quantity,
-					};
-					setBeers((prevState) => [...prevState, beerObj]);
-				});
-			} catch (error) {
-				message.error(error.message);
-			}
-		};
-		loadBeers();
-	}, []);
-	function deleteBeer(id) {
-		const url = `api/v1/beers/${id}`;
+	const loadBeers = async () => {
 		try {
-			fetch(url, { method: 'delete' }).then((data) => {
-				if (data.ok) {
-					setBeers([]);
-					return data.json();
-				}
+			// API routes within routes.rb file
+			const url = '/api/v1/beers/index';
+
+			const response = await fetch(url);
+			const result = await response.json();
+			result.forEach((beer) => {
+				const beerObj = {
+					key: beer.id,
+					id: beer.id,
+					brand: beer.brand,
+					style: beer.style,
+					country: beer.country,
+					quantity: beer.quantity,
+				};
+				setBeers((prevState) => [...prevState, beerObj]);
 			});
 		} catch (error) {
 			message.error(error.message);
 		}
-	}
+	};
+	const reloadBeers = () => {
+		setBeers([]);
+		loadBeers();
+	};
+	const deleteBeer = (id) => {
+		const url = `api/v1/beers/${id}`;
+		try {
+			fetch(url, { method: 'delete' }).then((data) => {
+				if (data.ok) {
+					reloadBeers();
+					return data.json();
+				}
+				throw new Error('Network error.');
+			});
+		} catch (error) {
+			message.error(error.message);
+		}
+	};
+	useEffect(() => {
+		loadBeers();
+	}, []);
 	return (
-		<Table
-			className="table-striped-rows"
-			dataSource={beers}
-			columns={columns}
-			pagination={{ pageSize: 5 }}
-		/>
+		<>
+			<Table
+				className="table-striped-rows"
+				dataSource={beers}
+				columns={columns}
+				pagination={{ pageSize: 5 }}
+			/>
+			<AddBeerModal reloadBeers={reloadBeers} />
+		</>
 	);
 };
 
